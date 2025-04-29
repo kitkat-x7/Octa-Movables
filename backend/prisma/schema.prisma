@@ -18,6 +18,7 @@ enum wheel_type{
   TWO_WHEELER
   FOUR_WHEELER
 }
+
 model VehicleType{
   id Int @default(autoincrement()) @id
   wheel wheel_type
@@ -29,11 +30,11 @@ model VehicleType{
 //Vehicle Model Type Model
 model VehicleModel{
   id Int @default(autoincrement()) @id
-  name String
+  modelname String
   vehicletypeid Int
   vehicletype VehicleType @relation(fields: [vehicletypeid], references: [id])
   bookings Booking[]
-  @@unique([name,vehicletypeid])
+  @@unique([modelname,vehicletypeid])
 }
 
 //Booking Model

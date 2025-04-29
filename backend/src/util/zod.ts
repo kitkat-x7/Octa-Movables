@@ -24,18 +24,16 @@ export const booking_schema=z.object({
     modelid:z.number({
         message:"modelid must be a number"
     }),
-    time:z.object({
-        starttime:z.coerce.date(),
-        endtime: z.coerce.date()
-    }).refine(data=>data.endtime>data.starttime,({
-        message:"End time must be after start time",
-        path:["endtime"]
-    })).refine(data=>{
-        const now=new Date();
-        const istNow=new Date(now.getTime()+(5.5*60*60*1000)); //Current IST Time
-        return data.starttime>=istNow;
-    },{
-        message: "Start time cannot be in the past (IST time)",
-        path: ["starttime"]
-    })
+    starttime: z.coerce.date(),
+    endtime: z.coerce.date()
+}).refine(data=>data.endtime>data.starttime,({
+    message:"End time must be after start time",
+    path:["endtime"]
+})).refine(data=>{
+    const now=new Date();
+    const istNow=new Date(now.getTime()+(5.5*60*60*1000)); //Current IST Time
+    return data.starttime>=istNow;
+},{
+    message: "Start time cannot be in the past (IST time)",
+    path: ["starttime"]
 });
