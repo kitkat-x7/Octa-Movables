@@ -2,18 +2,14 @@ import { Prisma } from "@prisma/client";
 import prisma from "../../../config/prisma_client"
 import { Databaseerror } from "../../../middleware/errorhanddler";
 
-export const patch_type=async (id:number,data:vehicle_Type_Details)=>{
+export const delete_type=async (id:number)=>{
     try{
-        const model=prisma.vehicleType.update({
+        prisma.vehicleType.delete({
             where:{
                 id
-            },
-            data:{
-                name:data.name,
-                wheel:data.wheel
             }
-        });
-        return model;
+        })
+        return;
     }catch(err){
         if(err instanceof Prisma.PrismaClientKnownRequestError){
             throw new Databaseerror(err.message,err,err.code);
@@ -29,5 +25,5 @@ export const patch_type=async (id:number,data:vehicle_Type_Details)=>{
         else{
             throw new Databaseerror("Unknown Database Error",err);
         }
-    }
+    }   
 }
