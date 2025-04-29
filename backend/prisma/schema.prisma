@@ -13,7 +13,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//VechicleWheel Type Model
+//Vehicle Type Model
 enum wheel_type{
   TWO_WHEELER
   FOUR_WHEELER
@@ -26,7 +26,7 @@ model VehicleType{
   @@unique([name])
 }
 
-//Vechicle Type Model
+//Vehicle Model Type Model
 model VehicleModel{
   id Int @default(autoincrement()) @id
   name String
@@ -36,6 +36,7 @@ model VehicleModel{
   @@unique([name,vehicletypeid])
 }
 
+//Booking Model
 model Booking{
   id Int @default(autoincrement()) @id
   firstname String
