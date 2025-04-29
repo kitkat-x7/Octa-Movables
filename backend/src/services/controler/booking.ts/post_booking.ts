@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../../config/prisma_client"
 import { Databaseerror } from "../../../middleware/errorhanddler";
+import { Booking_Details } from "../../../util/types";
 
 export const post_bookings=async (data:Booking_Details)=>{
     try{
@@ -13,6 +14,14 @@ export const post_bookings=async (data:Booking_Details)=>{
                 enddate:data.lastname
             }
         });
+        prisma.vehicleModel.update({
+            where:{
+                id:data.modelid
+            },
+            data:{
+                available:false
+            }
+        })
         return bookig_data;
     }catch(err){
         if(err instanceof Prisma.PrismaClientKnownRequestError){

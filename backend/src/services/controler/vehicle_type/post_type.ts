@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../../config/prisma_client"
 import { Databaseerror } from "../../../middleware/errorhanddler";
+import { vehicle_Type_Details } from "../../../util/types";
 
 export const post_type=async (data:vehicle_Type_Details)=>{
     try{

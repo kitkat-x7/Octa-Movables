@@ -33,8 +33,9 @@ model VehicleModel{
   modelname String
   vehicletypeid Int
   vehicletype VehicleType @relation(fields: [vehicletypeid], references: [id])
+  available Boolean @default(true)
   bookings Booking[]
-  @@unique([modelname,vehicletypeid])
+  @@unique([modelname])
 }
 
 //Booking Model

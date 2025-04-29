@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../../config/prisma_client"
 import { Databaseerror } from "../../../middleware/errorhanddler";
+import { vehicle_Type_Details } from "../../../util/types";
 
 export const patch_type=async (id:number,data:vehicle_Type_Details)=>{
     try{

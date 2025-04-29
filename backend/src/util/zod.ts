@@ -1,4 +1,4 @@
-import z from 'zod';
+import z, { string } from 'zod';
 
 
 
@@ -36,4 +36,23 @@ export const booking_schema=z.object({
 },{
     message: "Start time cannot be in the past (IST time)",
     path: ["starttime"]
+});
+
+
+export const model_schema=z.object({
+    modelname:z.string({
+        message:"Model Name has to be a string"
+    }),
+    vehicletypeid:z.number({
+        message:"vehicle type id has to be a number"
+    })
+});
+
+export const type_schema=z.object({
+    wheel:z.enum(["TWO_WHEELER","FOUR_WHEELER"],{
+        message:"Please specify a valid wheel type"
+    }),
+    name:z.string({
+        message:"vehicle type has to be a string"
+    }),
 });
