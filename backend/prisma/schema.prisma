@@ -19,6 +19,14 @@ enum wheel_type{
   FOUR_WHEELER
 }
 
+
+model Admin{
+  id Int @default(autoincrement()) @id
+  email String @unique
+  password String
+}
+
+
 model VehicleType{
   id Int @default(autoincrement()) @id
   wheel wheel_type

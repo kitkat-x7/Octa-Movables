@@ -17,3 +17,8 @@ export interface vehicle_Type_Details{
     wheel:wheel_type,
     name:string
 }
+
+export interface admin{
+    email:string,
+    password:string
+}

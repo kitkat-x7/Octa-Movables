@@ -56,3 +56,16 @@ export const type_schema=z.object({
         message:"vehicle type has to be a string"
     }),
 });
+
+export const admin_schema=z.object({
+    email:z.string({ message: "Email must be a string" })
+        .min(11,{ message: "Email must be at least 11 char longs" })
+        .max(200,{ message: "Email must be at atmost 100 char longs" })
+        .email({ message: "Must be an email." }),
+    password:z.string({ message: "Password must be a string" })
+        .min(8, { message: "Password must be at least 8 characters long" })
+        .max(100, { message: "Password must be at most 100 characters long" })
+        .regex(/^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).*$/, {
+        message: "Password must contain at least one uppercase letter, one number, and one special character."
+    })
+});
