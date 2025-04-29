@@ -12,3 +12,37 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+//VechicleWheel Type Model
+enum wheel_type{
+  TWO_WHEELER
+  FOUR_WHEELER
+}
+model VehicleType{
+  id Int @default(autoincrement()) @id
+  wheel wheel_type
+  name String
+  vehicle VehicleModel[]
+  @@unique([name])
+}
+
+//Vechicle Type Model
+model VehicleModel{
+  id Int @default(autoincrement()) @id
+  name String
+  vehicletypeid Int
+  vehicletype VehicleType @relation(fields: [vehicletypeid], references: [id])
+  bookings Booking[]
+  @@unique([name,vehicletypeid])
+}
+
+model Booking{
+  id Int @default(autoincrement()) @id
+  firstname String
+  lastname String
+  modelid Int
+  vehiclemodel VehicleModel @relation(fields: [modelid],references: [id])
+  startdate DateTime
+  enddate DateTime
+  @@unique([modelid,startdate,enddate])
+}
