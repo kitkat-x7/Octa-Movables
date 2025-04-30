@@ -4,10 +4,13 @@ import { Databaseerror } from "../../../middleware/errorhanddler";
 import { Model_Metrics, Type_Metrics, Wheel_Metrics, Matrics } from "../../../util/types";
 import { get_Metrics_cache, set_Metrics_cache } from "../../cache/dashboard";
 
-export const Analytics = async (): Promise<Matrics> => {
+
+export const Analytics = async () => {
 try{
     let Data = await get_Metrics_cache();
-    if (Data) return Data;
+    if (Data){
+        return Data;
+    };
     const Model_data = await prisma.vehicleModel.findMany();
     const Type_data = await prisma.vehicleType.findMany();
     let Model_Count = new Map<string, number>();
