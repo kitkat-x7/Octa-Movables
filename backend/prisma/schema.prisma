@@ -41,6 +41,7 @@ model VehicleModel{
   modelname String
   vehicletypeid Int
   vehicletype VehicleType @relation(fields: [vehicletypeid], references: [id])
+  Rent_count Int @default(0)
   available Boolean @default(true)
   bookings Booking[]
   @@unique([modelname])

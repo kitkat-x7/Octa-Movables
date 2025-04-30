@@ -22,3 +22,24 @@ export interface admin{
     email:string,
     password:string
 }
+
+export interface Model_Metrics{
+    name:string,
+    number:number
+}
+
+export interface Type_Metrics{
+    name:string,
+    number:number
+}
+
+export interface Wheel_Metrics{
+    name:wheel_type,
+    number:number
+}
+
+export interface Matrics{
+    model:Model_Metrics[],
+    type:Type_Metrics[],
+    wheel:Wheel_Metrics[]
+}
