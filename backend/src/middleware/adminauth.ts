@@ -2,7 +2,6 @@ import {Request,Response,NextFunction} from "express";
 import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import dotenv from 'dotenv'; 
 import { Servererror } from "./errorhanddler";
-import { secret_jwt } from "../services/controler/admin.ts/adminlogin";
 dotenv.config(); 
 
 export {}
@@ -22,7 +21,7 @@ export const verifyuser=(req:Request,res:Response,next:NextFunction)=>{
         next(new Servererror("Token or secret not found",400));
         return;
     }
-    jwt.verify(token,secret_jwt,(err,data)=>{
+    jwt.verify(token,JWT_SECRET,(err,data)=>{
         if(err){
             if(err instanceof JsonWebTokenError){
                 next(new Servererror(err.message,401,err));

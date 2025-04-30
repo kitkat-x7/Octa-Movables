@@ -1,6 +1,6 @@
 import { Prisma, wheel_type } from "@prisma/client";
 import prisma from "../../../config/prisma_client";
-import { Databaseerror } from "../../../middleware/errorhanddler";
+import { Databaseerror, handlePrismaError } from "../../../middleware/errorhanddler";
 import { Model_Metrics, Type_Metrics, Wheel_Metrics, Matrics } from "../../../util/types";
 import { get_Metrics_cache, set_Metrics_cache } from "../../cache/dashboard";
 
@@ -36,19 +36,6 @@ try{
     return finalMetrics;
 }
 catch(err){
-    if(err instanceof Prisma.PrismaClientKnownRequestError){
-        throw new Databaseerror(err.message,err,err.code);
-    }else if(err instanceof Prisma.PrismaClientValidationError){
-        throw new Databaseerror(err.message,err);
-    }else if(err instanceof Prisma.PrismaClientUnknownRequestError){
-        throw new Databaseerror(err.message,err);
-    }else if(err instanceof Prisma.PrismaClientRustPanicError){
-        throw new Databaseerror(err.message,err);
-    }else if(err instanceof Prisma.PrismaClientInitializationError){
-        throw new Databaseerror(err.message,err);
-    }
-    else{
-        throw new Databaseerror("Unknown Database Error",err);
-    }
+    handlePrismaError(err);
   }   
 };

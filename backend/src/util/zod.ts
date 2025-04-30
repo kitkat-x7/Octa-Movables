@@ -7,7 +7,7 @@ export const booking_schema=z.object({
         message:"Firstname must be a string."
     })
     .min(1,{
-        message:"Firstname should be atmost 150 characters long."
+        message:"Firstname must not be empty."
     })
     .max(150,{
         message:"Firstname should be atmost 150 characters long."
@@ -16,7 +16,7 @@ export const booking_schema=z.object({
         message:"Lastname must be a string."
     })
     .min(1,{
-        message:"Lastname should be atmost 150 characters long."
+        message:"Lastname must not be empty."
     })
     .max(150,{
         message:"Lastname should be atmost 150 characters long."

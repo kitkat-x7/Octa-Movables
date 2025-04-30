@@ -1,29 +1,17 @@
-import { Prisma } from "@prisma/client";
 import prisma from "../../../config/prisma_client"
-import { Databaseerror } from "../../../middleware/errorhanddler";
+import { handlePrismaError } from "../../../middleware/errorhanddler";
+import { delete_VehicleModel_cache } from "../../cache/vehicle_model";
 
 export const delete_model=async (id:number)=>{
     try{
-        prisma.vehicleModel.delete({
+        await prisma.vehicleModel.delete({
             where:{
                 id
             }
-        })
+        });
+        delete_VehicleModel_cache(id);
         return;
     }catch(err){
-        if(err instanceof Prisma.PrismaClientKnownRequestError){
-            throw new Databaseerror(err.message,err,err.code);
-        }else if(err instanceof Prisma.PrismaClientValidationError){
-            throw new Databaseerror(err.message,err);
-        }else if(err instanceof Prisma.PrismaClientUnknownRequestError){
-            throw new Databaseerror(err.message,err);
-        }else if(err instanceof Prisma.PrismaClientRustPanicError){
-            throw new Databaseerror(err.message,err);
-        }else if(err instanceof Prisma.PrismaClientInitializationError){
-            throw new Databaseerror(err.message,err);
-        }
-        else{
-            throw new Databaseerror("Unknown Database Error",err);
-        }
+        handlePrismaError(err);
     }   
 }

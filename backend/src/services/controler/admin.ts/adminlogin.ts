@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../../config/prisma_client";
-import { Databaseerror, Servererror } from "../../../middleware/errorhanddler";
+import { Databaseerror, handlePrismaError, Servererror } from "../../../middleware/errorhanddler";
 import { admin } from "../../../util/types";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -20,12 +20,7 @@ export const signup=async (data:admin)=>{
         });
         return;
     }catch(err){
-        if(err instanceof Databaseerror){
-            throw new Databaseerror(err.message,err,err.code);
-        }else{
-            console.error("Service layer error:",err);
-            throw new Servererror(`Server Error`,500,err);
-        }
+        handlePrismaError(err);
     }
 };
 
@@ -46,25 +41,12 @@ export const signin=async (data:admin)=>{
             throw new Servererror(`Invalid Password.`,403);
         }
     }catch(err){
-        if(err instanceof Databaseerror){
-            throw new Databaseerror(err.message,err,err.code);
-        }else if(err instanceof Servererror){
-            throw new Servererror(`Server Error`,err.status,err);
-        }else{
-            throw new Servererror(`Server Error`,500,err);
-        }
+        handlePrismaError(err);
     }
 };
 
 
-export const secret_jwt=():string=>{
-    const secret=process.env.JWT_SECRET;
-    if(secret){
-        return secret;
-    }else{
-        return `Not available`;
-    }
-}
+
 
 export const get_admin_details=async (data:string | number)=>{
     try{
@@ -84,21 +66,7 @@ export const get_admin_details=async (data:string | number)=>{
             return admim;
         }
     }catch(err){
-        if(err instanceof Prisma.PrismaClientKnownRequestError){
-            throw new Databaseerror(err.message,err,err.code);
-        }else if(err instanceof Prisma.PrismaClientValidationError){
-            throw new Databaseerror(err.message,err);
-        } 
-        else if(err instanceof Prisma.PrismaClientUnknownRequestError){
-            throw new Databaseerror(err.message,err);
-        }else if(err instanceof Prisma.PrismaClientRustPanicError){
-            throw new Databaseerror(err.message,err);
-        }else if(err instanceof Prisma.PrismaClientInitializationError){
-            throw new Databaseerror(err.message,err);
-        }
-        else{
-            throw new Databaseerror("Unknown Database Error",err);
-        }
+        handlePrismaError(err);
     }
 }
 
@@ -112,21 +80,7 @@ export const post_admin_details=async (data:admin)=>{
         });
         return admin;
     }catch(err){
-        if(err instanceof Prisma.PrismaClientKnownRequestError){
-            throw new Databaseerror(err.message,err,err.code);
-        }else if(err instanceof Prisma.PrismaClientValidationError){
-            throw new Databaseerror(err.message,err);
-        } 
-        else if(err instanceof Prisma.PrismaClientUnknownRequestError){
-            throw new Databaseerror(err.message,err);
-        }else if(err instanceof Prisma.PrismaClientRustPanicError){
-            throw new Databaseerror(err.message,err);
-        }else if(err instanceof Prisma.PrismaClientInitializationError){
-            throw new Databaseerror(err.message,err);
-        }
-        else{
-            throw new Databaseerror("Unknown Database Error",err);
-        }
+        handlePrismaError(err);
     }
 }
 

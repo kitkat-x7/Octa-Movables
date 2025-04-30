@@ -18,3 +18,8 @@ export const get_booking_cache=async (id:number)=>{
     const value=await myCache.get(key) as Booking_Details;
     return value;
 };
+
+export const delete_booking_cache=(id:number)=>{
+    const key=`Booking${id}`;
+    myCache.del(key);
+};

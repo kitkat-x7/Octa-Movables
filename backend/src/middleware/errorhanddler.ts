@@ -1,4 +1,6 @@
 import { Request,Response,NextFunction } from "express";
+import prisma from "../config/prisma_client";
+import { Prisma } from "@prisma/client";
 
 const map: Record<string, number> = {
     P1000: 401,
@@ -79,3 +81,21 @@ export const error_handler=(err:Error | Servererror | Databaseerror,req:Request,
         });
     }
 }
+
+export const handlePrismaError=(err: unknown)=> {
+    if (err instanceof Prisma.PrismaClientKnownRequestError)
+      throw new Databaseerror(err.message, err, err.code);
+    if (err instanceof Prisma.PrismaClientValidationError)
+      throw new Databaseerror(err.message, err);
+    if (err instanceof Prisma.PrismaClientUnknownRequestError)
+      throw new Databaseerror(err.message, err);
+    if (err instanceof Prisma.PrismaClientRustPanicError)
+      throw new Databaseerror(err.message, err);
+    if (err instanceof Prisma.PrismaClientInitializationError)
+      throw new Databaseerror(err.message, err);
+    if(err instanceof Servererror){
+        throw new Servererror(err.message,err.status,err);
+    }
+    throw new Servererror("Unknown Database Error",500,err);
+}
+  

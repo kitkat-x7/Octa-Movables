@@ -1,11 +1,11 @@
-import { Prisma } from "@prisma/client";
 import prisma from "../../../config/prisma_client"
-import { Databaseerror } from "../../../middleware/errorhanddler";
+import { handlePrismaError } from "../../../middleware/errorhanddler";
 import { vehicle_Model_Details } from "../../../util/types";
+import { set_Vehiclemodel_cache } from "../../cache/vehicle_model";
 
 export const patch_model=async (id:number,data:vehicle_Model_Details)=>{
     try{
-        const model=prisma.vehicleModel.update({
+        const model=await prisma.vehicleModel.update({
             where:{
                 id
             },
@@ -14,21 +14,12 @@ export const patch_model=async (id:number,data:vehicle_Model_Details)=>{
                 vehicletypeid:data.vehicletypeid
             }
         });
+        set_Vehiclemodel_cache({
+            modelname:model.modelname,
+            vehicletypeid:model.vehicletypeid
+        },model.id,model.available);
         return model;
     }catch(err){
-        if(err instanceof Prisma.PrismaClientKnownRequestError){
-            throw new Databaseerror(err.message,err,err.code);
-        }else if(err instanceof Prisma.PrismaClientValidationError){
-            throw new Databaseerror(err.message,err);
-        }else if(err instanceof Prisma.PrismaClientUnknownRequestError){
-            throw new Databaseerror(err.message,err);
-        }else if(err instanceof Prisma.PrismaClientRustPanicError){
-            throw new Databaseerror(err.message,err);
-        }else if(err instanceof Prisma.PrismaClientInitializationError){
-            throw new Databaseerror(err.message,err);
-        }
-        else{
-            throw new Databaseerror("Unknown Database Error",err);
-        }
+        handlePrismaError(err);
     }
 }

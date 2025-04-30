@@ -1,29 +1,28 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../../../config/prisma_client"
-import { Databaseerror } from "../../../middleware/errorhanddler";
+import { Databaseerror, handlePrismaError } from "../../../middleware/errorhanddler";
+import { get_booking_cache, set_booking_cache } from "../../cache/booking";
 
 export const get_bookings=async (id:number)=>{
     try{
-        const data=prisma.booking.findUniqueOrThrow({
+        let data=await get_booking_cache(id);
+        if(data){
+            return data;
+        }
+        const Data=await prisma.booking.findUniqueOrThrow({
             where:{
                 id
             }
-        })
-        return data;
+        });
+        set_booking_cache({
+            firstname:Data.firstname,
+            lastname:Data.lastname,
+            modelid:Data.modelid,
+            startdate:Data.startdate,
+            enddate:Data.enddate
+        },id);
+        return Data;
     }catch(err){
-        if(err instanceof Prisma.PrismaClientKnownRequestError){
-            throw new Databaseerror(err.message,err,err.code);
-        }else if(err instanceof Prisma.PrismaClientValidationError){
-            throw new Databaseerror(err.message,err);
-        }else if(err instanceof Prisma.PrismaClientUnknownRequestError){
-            throw new Databaseerror(err.message,err);
-        }else if(err instanceof Prisma.PrismaClientRustPanicError){
-            throw new Databaseerror(err.message,err);
-        }else if(err instanceof Prisma.PrismaClientInitializationError){
-            throw new Databaseerror(err.message,err);
-        }
-        else{
-            throw new Databaseerror("Unknown Database Error",err);
-        }
+        handlePrismaError(err);
     }   
 }

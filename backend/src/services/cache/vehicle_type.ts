@@ -11,7 +11,12 @@ export const set_VehicleType_cache=(data:vehicle_Type_Details,id:number)=>{
 };
 
 export const get_VehicleType_cache=async (id:number)=>{
-    const key=`Model${id}`;
+    const key=`Type${id}`;
     const value=await myCache.get(key) as vehicle_Type_Details;
     return value;
+};
+
+export const delete_VehicleType_cache=async (id:number)=>{
+    const key=`Type${id}`;
+    myCache.del(key);
 };
