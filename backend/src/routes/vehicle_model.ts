@@ -1,6 +1,6 @@
 import express,{Request,Response,NextFunction} from 'express';
 import z,{ZodError} from 'zod';
-import { get_model } from '../services/controler/vehicle_model/get_model';
+import { get_model, get_model_by_type } from '../services/controler/vehicle_model/get_model';
 import { model_schema } from '../util/zod';
 import { post_model } from '../services/controler/vehicle_model/post_model';
 import { patch_model } from '../services/controler/vehicle_model/update_model';
@@ -17,6 +17,25 @@ router.get('/:modelid',async (req:Request,res:Response,next:NextFunction)=>{
         const data=await get_model(modelid);
         res.status(200).json({
             message:"Model Data Fetched",
+            payload:data
+        }); 
+    }catch(err){
+        if(err instanceof Databaseerror){
+            return next(new Databaseerror(err.message,err,err.code));
+        }else{
+            console.error("Service layer error:",err);
+            return next(new Servererror("Server Error",500,err));
+        }
+    }
+});
+
+router.get('/type/:typeid',async (req:Request,res:Response,next:NextFunction)=>{
+    try{
+        const typeid=Number(req.params.typeid);
+        console.log(typeid);
+        const data=await get_model_by_type(typeid);
+        res.status(200).json({
+            message:"Vehicle Types based on wheel Fetched",
             payload:data
         }); 
     }catch(err){

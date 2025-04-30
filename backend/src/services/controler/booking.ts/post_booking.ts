@@ -15,19 +15,10 @@ export const post_bookings=async (data:Booking_Details)=>{
                 modelname:true
             }
         });
-        if(!booking_available.available){
+        if(booking_available.available==false){
             throw new Servererror(`${booking_available.modelname} is not available for booking`,404);
         }
-        const bookig_data=await prisma.booking.create({
-            data:{
-                firstname:data.firstname,
-                lastname:data.lastname,
-                modelid:data.modelid,
-                startdate:data.startdate,
-                enddate:data.lastname
-            }
-        });
-        prisma.vehicleModel.update({
+        await prisma.vehicleModel.update({
             where:{
                 id:data.modelid
             },
@@ -47,6 +38,15 @@ export const post_bookings=async (data:Booking_Details)=>{
             modelname:Data1.modelname,
             vehicletypeid:Data1.vehicletypeid,
         },data.modelid,false);
+        const bookig_data=await prisma.booking.create({
+            data:{
+                firstname:data.firstname,
+                lastname:data.lastname,
+                modelid:data.modelid,
+                startdate:data.startdate,
+                enddate:data.enddate
+            }
+        });
         set_booking_cache({
             firstname:data.firstname,
             lastname:data.lastname,

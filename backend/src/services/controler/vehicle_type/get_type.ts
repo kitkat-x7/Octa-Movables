@@ -25,6 +25,7 @@ export const get_type=async (id:number)=>{
 
 export const get_type_by_wheel=async (wheel:wheel_type)=>{
     try{
+        console.log(wheel)
         const data=await prisma.vehicleType.findMany({
             where:{
                 wheel

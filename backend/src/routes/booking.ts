@@ -5,6 +5,7 @@ import { post_bookings } from '../services/controler/booking.ts/post_booking';
 import { get_bookings } from '../services/controler/booking.ts/get_booking';
 import { Databaseerror, error_handler, Servererror } from '../middleware/errorhanddler';
 import { verifyuser } from '../middleware/adminauth';
+import { timer } from '../util/vehicle_timer';
 const router=express.Router();
 router.use(express.json());
 router.use(error_handler);
@@ -20,6 +21,9 @@ router.post('/',async (req:Request,res:Response,next:NextFunction)=>{
             startdate:starttime,
             enddate:endtime
         });
+        const startEpoch = new Date(starttime).getTime();
+        const endEpoch = new Date(endtime).getTime();
+        timer(endEpoch-startEpoch,modelid);
         res.status(200).json({
             message:"Booking Created",
             payload:bookig_data
