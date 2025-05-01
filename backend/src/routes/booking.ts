@@ -12,7 +12,9 @@ router.use(error_handler);
 
 router.post('/',async (req:Request,res:Response,next:NextFunction)=>{
     try{
+        console.log(req.body);
         const data=booking_schema.parse(req.body);
+        console.log(req.body);
         const {firstname,lastname,modelid,starttime,endtime}=data;
         const bookig_data=await post_bookings({
             firstname,

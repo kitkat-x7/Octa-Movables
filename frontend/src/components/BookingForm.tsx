@@ -27,7 +27,6 @@ export default function BookingForm() {
     }
   }, [step, form.wheels]);
 
-  // Fetch vehicle models based on type selection
   useEffect(() => {
     if (step === 3 && form.typeId) {
       getVehicleModels(Number(form.typeId)).then(res => {
@@ -65,19 +64,23 @@ export default function BookingForm() {
 
   const handleSubmit = async () => {
     try {
+      const startISO = new Date(form.startDate).toISOString();
+      const endISO = new Date(form.endDate).toISOString();
+  
       await createBooking({
         firstname: form.firstName,
         lastname: form.lastName,
         modelid: Number(form.modelId),
-        startdate: form.startDate,
-        enddate: form.endDate,
+        starttime: startISO,   
+        endtime: endISO,      
       });
       alert("Booking successful!");
     } catch (e) {
       setError("Booking failed. Please try again.");
     }
-  };
-
+  };  
+  
+  
   return (
     <div style={{ maxWidth: 400, margin: "auto" }}>
       <Typography variant="h5">Book a Vehicle</Typography>
