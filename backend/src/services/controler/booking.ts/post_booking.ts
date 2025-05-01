@@ -12,7 +12,8 @@ export const post_bookings=async (data:Booking_Details)=>{
                 id:data.modelid
             },select:{
                 available:true,
-                modelname:true
+                modelname:true,
+                Rent_count:true
             }
         });
         if(booking_available.available==false){
@@ -23,7 +24,8 @@ export const post_bookings=async (data:Booking_Details)=>{
                 id:data.modelid
             },
             data:{
-                available:false
+                available:false,
+                Rent_count:booking_available.Rent_count+1
             }
         });
         let Data1=await get_VehicleModel_cache(data.modelid);

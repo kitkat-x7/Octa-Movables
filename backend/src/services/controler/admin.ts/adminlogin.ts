@@ -14,6 +14,7 @@ export const signup=async (data:admin)=>{
             throw new Servererror(`User with ${data.email} already exists.`,409);
         }
         const password_hassed=await bcrypt.hash(data.password,10);
+        
         await post_admin_details({
             email:data.email,
             password:password_hassed
@@ -51,14 +52,14 @@ export const signin=async (data:admin)=>{
 export const get_admin_details=async (data:string | number)=>{
     try{
         if(typeof(data)==='string'){
-            const admin=await prisma.admin.findUniqueOrThrow({
+            const admin=await prisma.admin.findUnique({
                 where:{
                     email:data
                 }
             });
             return admin;
         }else{
-            const admim=await prisma.admin.findUniqueOrThrow({
+            const admim=await prisma.admin.findUnique({
                 where:{
                     id:data
                 }
