@@ -75,7 +75,7 @@ export default function BookingForm() {
         endtime: endISO,      
       });
       alert("Booking successful!");
-    } catch (e) {
+    } catch (err) {
       setError("Booking failed. Please try again.");
     }
   };  
