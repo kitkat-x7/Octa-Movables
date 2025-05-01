@@ -2,6 +2,7 @@ import {Request,Response,NextFunction} from "express";
 import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import dotenv from 'dotenv'; 
 import { Servererror } from "./errorhanddler";
+import { Payload } from "../util/types";
 dotenv.config(); 
 
 export {}
@@ -15,25 +16,27 @@ declare global {
 
 let token_data;
 export const verifyuser=(req:Request,res:Response,next:NextFunction)=>{
-    const token=req.header('token');
-    const JWT_SECRET=process.env.JWT_SECRET;
-    if(!token || !JWT_SECRET){
-        next(new Servererror("Token or secret not found",400));
-        return;
-    }
-    jwt.verify(token,JWT_SECRET,(err,data)=>{
-        if(err){
-            if(err instanceof JsonWebTokenError){
-                next(new Servererror(err.message,401,err));
-                return;
-            }else{
-                next(new Servererror("Unauthorised access",401,err));
-                return;
-            }
-        }else{
-            req.id=data;
-            return next();
+    try{
+        const token=req.header('token');
+        console.log(token)
+        const JWT_SECRET=process.env.JWT_SECRET;
+        if(!token || !JWT_SECRET){
+            next(new Servererror("Token or secret not found",400));
+            return;
         }
-    });
+        const data=jwt.verify(token,JWT_SECRET) as Payload;
+        console.log(data);
+        req.id=data.id;
+        return next();
+    }catch(err){
+        if(err instanceof JsonWebTokenError){
+            next(new Servererror(err.message,401,err));
+            return;
+        }else{
+            next(new Servererror("Unauthorised access",401,err));
+            return;
+        }
+    }
+    
 }
 export {token_data};

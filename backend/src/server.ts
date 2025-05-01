@@ -8,7 +8,7 @@ import { IncomingMessage } from "http";
 import { Analytics } from "./services/controler/admin.ts/dashboard"; // Adjust the path if needed
 import { verification } from "./util/verifiadmin";
 import { Servererror } from "./middleware/errorhanddler";
-
+import url from "url";
 // Load environment variables
 dotenv.config();
 
@@ -38,7 +38,9 @@ const clients = new Set<WebSocket>();
 
 wss.on("connection", async (socket: WebSocket, req: IncomingMessage) => {
   try {
-    const token = req.headers["token"] as string | undefined;
+
+    const query = url.parse(req.url || "", true).query;
+    const token = query.token as string | undefined;
     if (!token) throw new Servererror("No Token Found", 404);
     const adminid = verification(token);
     clients.add(socket);

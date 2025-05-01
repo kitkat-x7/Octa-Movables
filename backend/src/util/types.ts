@@ -6,6 +6,11 @@ export interface Booking_Details{
   enddate:Date 
 }
 
+export interface Payload{
+    id:number,
+    iat:number,
+    exp:number
+}
 export interface vehicle_Model_Details{
     modelname:string,
     vehicletypeid:number

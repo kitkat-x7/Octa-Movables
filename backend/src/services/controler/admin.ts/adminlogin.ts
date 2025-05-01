@@ -28,6 +28,7 @@ export const signup=async (data:admin)=>{
 export const signin=async (data:admin)=>{
     try{
         const user=await get_admin_details(data.email);
+        
         if(!user){
             throw new Servererror(`User with ${data.email} doesn't exist.`,404);
         }
@@ -51,12 +52,14 @@ export const signin=async (data:admin)=>{
 
 export const get_admin_details=async (data:string | number)=>{
     try{
+        
         if(typeof(data)==='string'){
             const admin=await prisma.admin.findUnique({
                 where:{
                     email:data
                 }
             });
+            console.log(admin)
             return admin;
         }else{
             const admim=await prisma.admin.findUnique({
