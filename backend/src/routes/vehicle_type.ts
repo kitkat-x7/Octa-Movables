@@ -32,6 +32,7 @@ router.get('/:typeid',async (req:Request,res:Response,next:NextFunction)=>{
 
 router.get('/wheel/:wheel',async (req:Request,res:Response,next:NextFunction)=>{
     try{
+       
         const wheel=req.params.wheel as wheel_type;
         console.log(wheel);
         const data=await get_type_by_wheel(wheel);
