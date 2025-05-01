@@ -17,7 +17,6 @@ export default function BookingForm() {
   const [vehicleModels, setVehicleModels] = useState<any[]>([]);
   const [error, setError] = useState("");
 
-  // Fetch vehicle types based on wheel selection
   useEffect(() => {
     if (step === 2 && form.wheels) {
       const wheelType = form.wheels === "2" ? "TWO_WHEELER" : "FOUR_WHEELER";
@@ -66,21 +65,19 @@ export default function BookingForm() {
     try {
       const startISO = new Date(form.startDate).toISOString();
       const endISO = new Date(form.endDate).toISOString();
-  
       await createBooking({
         firstname: form.firstName,
         lastname: form.lastName,
         modelid: Number(form.modelId),
-        starttime: startISO,   
-        endtime: endISO,      
+        starttime: startISO,
+        endtime: endISO,
       });
       alert("Booking successful!");
     } catch (err) {
       setError("Booking failed. Please try again.");
     }
-  };  
-  
-  
+  };
+
   return (
     <div style={{ maxWidth: 400, margin: "auto" }}>
       <Typography variant="h5">Book a Vehicle</Typography>

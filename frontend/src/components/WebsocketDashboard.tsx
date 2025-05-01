@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 
-const WS_URL = "ws://localhost:5000"; // Adjust as needed
-
 export default function WebSocketDashboard() {
+  const token = localStorage.getItem("adminToken");
+  const WS_URL = `ws://localhost:5000/?token=${token}`;
+
   const { lastMessage, readyState } = useWebSocket(WS_URL, {
     shouldReconnect: () => true,
   });
+
   const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
