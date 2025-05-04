@@ -1,6 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { getVehicleTypesbyWheel, getVehicleModels, createBooking } from "../api/api";
-import { Button, TextField, Radio, RadioGroup, FormControlLabel, Typography } from "@mui/material";
+import { 
+  Button, 
+  TextField, 
+  Radio, 
+  RadioGroup, 
+  FormControlLabel, 
+  Typography,
+  Box,
+  Stepper,
+  Step,
+  StepLabel,
+  Card,
+  CardContent,
+  Grid,
+  Alert
+} from "@mui/material";
+
+const steps = ['Personal Info', 'Vehicle Type', 'Vehicle Category', 'Model Selection', 'Booking Dates'];
 
 export default function BookingForm() {
   const [step, setStep] = useState(0);
@@ -16,6 +33,7 @@ export default function BookingForm() {
   const [vehicleTypes, setVehicleTypes] = useState<any[]>([]);
   const [vehicleModels, setVehicleModels] = useState<any[]>([]);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     if (step === 2 && form.wheels) {
@@ -72,59 +90,182 @@ export default function BookingForm() {
         starttime: startISO,
         endtime: endISO,
       });
-      alert("Booking successful!");
+      setSuccess(true);
+      setError("");
     } catch (err) {
       setError("Booking failed. Please try again.");
+      setSuccess(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: "auto" }}>
-      <Typography variant="h5">Book a Vehicle</Typography>
-      {error && <Typography color="error">{error}</Typography>}
-      {step === 0 && (
-        <div>
-          <TextField label="First Name" value={form.firstName}
-            onChange={e => setForm({ ...form, firstName: e.target.value })} fullWidth margin="normal" />
-          <TextField label="Last Name" value={form.lastName}
-            onChange={e => setForm({ ...form, lastName: e.target.value })} fullWidth margin="normal" />
-        </div>
-      )}
-      {step === 1 && (
-        <RadioGroup value={form.wheels} onChange={e => setForm({ ...form, wheels: e.target.value })}>
-          <FormControlLabel value="2" control={<Radio />} label="2 Wheels" />
-          <FormControlLabel value="4" control={<Radio />} label="4 Wheels" />
-        </RadioGroup>
-      )}
-      {step === 2 && (
-        <RadioGroup value={form.typeId} onChange={e => setForm({ ...form, typeId: e.target.value })}>
-          {vehicleTypes.map(t => (
-            <FormControlLabel key={t.id} value={String(t.id)} control={<Radio />} label={t.name} />
-          ))}
-        </RadioGroup>
-      )}
-      {step === 3 && (
-        <RadioGroup value={form.modelId} onChange={e => setForm({ ...form, modelId: e.target.value })}>
-          {vehicleModels.map(m => (
-            <FormControlLabel key={m.id} value={String(m.id)} control={<Radio />} label={m.modelname} />
-          ))}
-        </RadioGroup>
-      )}
-      {step === 4 && (
-        <div>
-          <TextField type="date" label="Start Date" InputLabelProps={{ shrink: true }}
-            value={form.startDate}
-            onChange={e => setForm({ ...form, startDate: e.target.value })} fullWidth margin="normal" />
-          <TextField type="date" label="End Date" InputLabelProps={{ shrink: true }}
-            value={form.endDate}
-            onChange={e => setForm({ ...form, endDate: e.target.value })} fullWidth margin="normal" />
-        </div>
-      )}
-      <div style={{ marginTop: 16 }}>
-        {step > 0 && <Button onClick={handlePrev}>Back</Button>}
-        {step < 4 && <Button onClick={handleNext}>Next</Button>}
-        {step === 4 && <Button onClick={handleSubmit}>Submit</Button>}
-      </div>
-    </div>
+    <Box sx={{ maxWidth: 800, margin: "auto", p: 3 }}>
+      <Typography variant="h4" gutterBottom align="center" sx={{ mb: 4 }}>
+        Vehicle Booking
+      </Typography>
+      
+      <Stepper activeStep={step} alternativeLabel sx={{ mb: 4 }}>
+        {steps.map((label) => (
+          <Step key={label}>
+            <StepLabel>{label}</StepLabel>
+          </Step>
+        ))}
+      </Stepper>
+
+      <Card>
+        <CardContent>
+          {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
+          {success && <Alert severity="success" sx={{ mb: 2 }}>Booking successful!</Alert>}
+
+          {step === 0 && (
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="First Name"
+                  value={form.firstName}
+                  onChange={e => setForm({ ...form, firstName: e.target.value })}
+                  fullWidth
+                  margin="normal"
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Last Name"
+                  value={form.lastName}
+                  onChange={e => setForm({ ...form, lastName: e.target.value })}
+                  fullWidth
+                  margin="normal"
+                  required
+                />
+              </Grid>
+            </Grid>
+          )}
+
+          {step === 1 && (
+            <Box sx={{ p: 2 }}>
+              <Typography variant="h6" gutterBottom>
+                Select Number of Wheels
+              </Typography>
+              <RadioGroup 
+                value={form.wheels} 
+                onChange={e => setForm({ ...form, wheels: e.target.value })}
+                sx={{ mt: 2 }}
+              >
+                <FormControlLabel 
+                  value="2" 
+                  control={<Radio />} 
+                  label="2 Wheels" 
+                />
+                <FormControlLabel 
+                  value="4" 
+                  control={<Radio />} 
+                  label="4 Wheels" 
+                />
+              </RadioGroup>
+            </Box>
+          )}
+
+          {step === 2 && (
+            <Box sx={{ p: 2 }}>
+              <Typography variant="h6" gutterBottom>
+                Select Vehicle Type
+              </Typography>
+              <RadioGroup 
+                value={form.typeId} 
+                onChange={e => setForm({ ...form, typeId: e.target.value })}
+                sx={{ mt: 2 }}
+              >
+                {vehicleTypes.map(t => (
+                  <FormControlLabel 
+                    key={t.id} 
+                    value={String(t.id)} 
+                    control={<Radio />} 
+                    label={t.name} 
+                  />
+                ))}
+              </RadioGroup>
+            </Box>
+          )}
+
+          {step === 3 && (
+            <Box sx={{ p: 2 }}>
+              <Typography variant="h6" gutterBottom>
+                Select Vehicle Model
+              </Typography>
+              <RadioGroup 
+                value={form.modelId} 
+                onChange={e => setForm({ ...form, modelId: e.target.value })}
+                sx={{ mt: 2 }}
+              >
+                {vehicleModels.map(m => (
+                  <FormControlLabel 
+                    key={m.id} 
+                    value={String(m.id)} 
+                    control={<Radio />} 
+                    label={m.modelname} 
+                  />
+                ))}
+              </RadioGroup>
+            </Box>
+          )}
+
+          {step === 4 && (
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  type="date"
+                  label="Start Date"
+                  InputLabelProps={{ shrink: true }}
+                  value={form.startDate}
+                  onChange={e => setForm({ ...form, startDate: e.target.value })}
+                  fullWidth
+                  margin="normal"
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  type="date"
+                  label="End Date"
+                  InputLabelProps={{ shrink: true }}
+                  value={form.endDate}
+                  onChange={e => setForm({ ...form, endDate: e.target.value })}
+                  fullWidth
+                  margin="normal"
+                  required
+                />
+              </Grid>
+            </Grid>
+          )}
+
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 3 }}>
+            <Button
+              variant="contained"
+              onClick={handlePrev}
+              disabled={step === 0}
+            >
+              Back
+            </Button>
+            {step < 4 ? (
+              <Button
+                variant="contained"
+                onClick={handleNext}
+              >
+                Next
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleSubmit}
+              >
+                Submit Booking
+              </Button>
+            )}
+          </Box>
+        </CardContent>
+      </Card>
+    </Box>
   );
 }
